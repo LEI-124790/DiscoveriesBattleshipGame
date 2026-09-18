@@ -3,7 +3,7 @@
 Basic academic version of Battleship game to build upon.
 
 # Bolinha
-LEI - Licenciatura Engenharia Informática
+**LEI - Licenciatura Engenharia Informática**
 | Nome | Numero | User |
 |--------------|--------|------------|
 | Luis Pacheco | 124790 | LEI-124790 |
