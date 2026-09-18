@@ -11,9 +11,9 @@ LEI - Licenciatura Engenharia Informática
 | Pedro Figueiredo | 129897 | LEI-129897 |
 | Ruben Fonseca | 129837 | LEI-129837 |
 
-## Navios
-* Porta-Aviões
-* Navio de 4 canhões
-* Navio de 3 Canhões
-* Navio de 2 canhões
-* Submarino
+## Navios/Quantidade
+* Porta-Aviões/1
+* Navio de 4 canhões/1
+* Navio de 3 Canhões/2
+* Navio de 2 canhões/3
+* Submarino/4
