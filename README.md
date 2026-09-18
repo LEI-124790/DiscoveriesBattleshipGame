@@ -12,8 +12,8 @@ LEI - Licenciatura Engenharia Informática
 | Ruben Fonseca | 129837 | LEI-129837 |
 
 ## Navios
-*Porta-Aviões
-*Navio de 4 canhões
-*Navio de 3 Canhões
-*Navio de 2 canhões
-*Submarino
+* Porta-Aviões
+* Navio de 4 canhões
+* Navio de 3 Canhões
+* Navio de 2 canhões
+* Submarino
