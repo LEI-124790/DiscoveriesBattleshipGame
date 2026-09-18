@@ -19,9 +19,7 @@ LEI - Licenciatura Engenharia Informática
 * Submarino/4
 
 
-## Battleship
-
-#Regras da Batalha Naval
+# Regras da Batalha Naval
 
 * Cada jogador recebe 2 tabuleiros (quadriculas de jogo), por norma 10x10, numerado de 1 a 10 na vertical e de A a J na horizontal. Numa posiciona a sua frota, na outra regista os ataques ao adversário.
 * Cada jogador posiciona a sua frota em segredo, os navios devem ficar na vertical e na horizontal sem nunca se sobreporem.
