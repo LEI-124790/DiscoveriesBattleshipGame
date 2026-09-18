@@ -11,13 +11,12 @@ LEI - Licenciatura Engenharia Informática
 | Pedro Figueiredo | 129897 | LEI-129897 |
 | Ruben Fonseca | 129837 | LEI-129837 |
 
-## Navios/Quantidade
-* Porta-Aviões/1
-* Navio de 4 canhões/1
-* Navio de 3 Canhões/2
-* Navio de 2 canhões/3
-* Submarino/4
-
+## Navios -> Quantidade
+* Porta-Aviões -> 1
+* Navio de 4 canhões -> 1
+* Navio de 3 Canhões -> 2
+* Navio de 2 canhões -> 3
+* Submarino -> 4
 
 # Regras da Batalha Naval
 
@@ -26,3 +25,4 @@ LEI - Licenciatura Engenharia Informática
 * Os jogadores tem direito a atacar uma vez por turno, escolhendo a linha e coluna desejada, exemplo: A3, se falhar é furo e o turno passa automáticamente para o seu adversário, caso atinga uma emarcação adversária, pode disparar de novo nesse mesmo turno.
 * Uma emarcação afunda quando todas as partes do navio foram atingidas.
 * Um dos jogadores ganha quando todos os navios do adversário tiverem afundado.
+
