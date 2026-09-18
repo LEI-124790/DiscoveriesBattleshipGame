@@ -2,7 +2,7 @@
 
 Basic academic version of Battleship game to build upon.
 
-# Bolinha
+# Nick do Grupo: Bolinha de Canhão
 **LEI - Licenciatura Engenharia Informática**
 | Nome | Numero | User |
 |--------------|--------|------------|
