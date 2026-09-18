@@ -20,9 +20,9 @@ LEI - Licenciatura Engenharia Informática
 
 # Regras da Batalha Naval
 
-* Cada jogador recebe 2 tabuleiros (quadriculas de jogo), por norma 10x10, numerado de 1 a 10 na vertical e de A a J na horizontal. Numa posiciona a sua frota, na outra regista os ataques ao adversário.
-* Cada jogador posiciona a sua frota em segredo, os navios devem ficar na vertical e na horizontal sem nunca se sobreporem.
-* Os jogadores tem direito a atacar uma vez por turno, escolhendo a linha e coluna desejada, exemplo: A3, se falhar é furo e o turno passa automáticamente para o seu adversário, caso atinga uma emarcação adversária, pode disparar de novo nesse mesmo turno.
-* Uma emarcação afunda quando todas as partes do navio foram atingidas.
-* Um dos jogadores ganha quando todos os navios do adversário tiverem afundado.
+* Cada jogador recebe 2 tabuleiros (quadrículas de jogo), por norma 10x10, numerados de 1 a 10 na vertical e de A a J na horizontal. Num posiciona a sua frota, no outro regista os ataques ao adversário.
+* Cada jogador posiciona a sua frota em segredo. Os navios devem ficar na vertical ou na horizontal, sem nunca se sobreporem.
+* Os jogadores têm direito a atacar uma vez por turno, escolhendo a linha e a coluna desejadas (exemplo: A3). Se falhar, é "água" e o turno passa automaticamente para o adversário; caso atinja uma embarcação adversária, ganha o direito de disparar de novo no mesmo turno.
+* Uma embarcação afunda quando todas as suas partes forem atingidas.
+* O jogo termina e um dos jogadores vence quando todos os navios do adversário forem afundados.
 
