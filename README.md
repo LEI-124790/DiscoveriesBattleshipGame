@@ -11,12 +11,15 @@ LEI - Licenciatura Engenharia Informática
 | Pedro Figueiredo | 129897 | LEI-129897 |
 | Ruben Fonseca | 129837 | LEI-129837 |
 
-## Navios -> Quantidade
-* Porta-Aviões -> 1
-* Navio de 4 canhões -> 1
-* Navio de 3 Canhões -> 2
-* Navio de 2 canhões -> 3
-* Submarino -> 4
+## Navios
+| Batalha Naval | Descobrimentos | English | Dimensão | #Navios |
+| --- | --- | --- | --- | --- |
+| Porta-aviões | Galeão | Galleon | 5 | 1 |
+| Navio de 4 canhões | Fragata | Frigate | 4 | 1 |
+| Navio de 3 canhões | Nau | Carrack | 3 | 2 |
+| Navio de 2 canhões | Caravela | Caravel | 2 | 3 |
+| Submarino | Barca | Barge | 1 | 4 |
+
 
 # Regras da Batalha Naval
 
