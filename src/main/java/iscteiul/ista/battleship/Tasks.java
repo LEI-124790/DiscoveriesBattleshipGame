@@ -1,57 +1,85 @@
-/**
- *
- */
 package iscteiul.ista.battleship;
 
 import java.util.Scanner;
-
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Classe utilitária que contém a lógica de execução e os modos de teste (tarefas)
+ * para o jogo Batalha Naval (Battleship).
+ * <p>
+ * Inclui rotinas para leitura e construção de navios, frotas, posições e simulação
+ * de rodadas de disparos via consola.
+ * </p>
+ *
+ * @author fba
+ */
 public class Tasks {
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    private static final int NUMBER_SHOTS = 3;
-
-    private static final String GOODBYE_MESSAGE = "Bons ventos!";
 
     /**
-     * Strings to be used by the user
+     * Logger para o registo de mensagens e eventos da aplicação.
      */
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    /**
+     * Número de disparos efetuados por cada rodada de ataques ("rajada").
+     */
+    private static final int NUMBER_SHOTS = 3;
+
+    /**
+     * Mensagem de despedida apresentada ao encerrar a execução.
+     */
+    private static final String GOODBYE_MESSAGE = "Bons ventos!";
+
+    /** Comando do utilizador para criar e inicializar uma nova frota. */
     private static final String NOVAFROTA = "nova";
+
+    /** Comando do utilizador para encerrar a tarefa / desistir do jogo. */
     private static final String DESISTIR = "desisto";
+
+    /** Comando do utilizador para efetuar uma rodada de disparos (rajada). */
     private static final String RAJADA = "rajada";
+
+    /** Comando do utilizador para visualizar no mapa os tiros válidos efetuados. */
     private static final String VERTIROS = "ver";
+
+    /** Comando do utilizador para exibir a posição real de todos os navios (batota). */
     private static final String BATOTA = "mapa";
+
+    /** Comando do utilizador para consultar o estado atual da frota. */
     private static final String STATUS = "estado";
 
 
     /////////////////////////////////////////////////////////////////////////////
-    // hereafter one may find some code that can be converted to automatic tests,
-    // as long as appropriate changes are made. It also shows that we should
-    // develop our code incrementally e.g. first the ships, then the fleet,
-    // then some rule checking, then dealing with firing and so on
+    // A partir daqui encontram-se tarefas de teste incremental da aplicação.
     /////////////////////////////////////////////////////////////////////////////
 
     /**
-     * This task tests the building up of ships: For each ship, reads positions and
-     * indicates whether the ship occupies each one of such positions or not
+     * Tarefa A: Testa a criação individual de navios.
+     * <p>
+     * Lê sucessivos navios do scanner e, para cada um, lê um conjunto de posições 
+     * e verifica se o navio as ocupa ou não.
+     * </p>
      */
     public static void taskA() {
         Scanner in = new Scanner(System.in);
         while (in.hasNext()) {
             Ship s = readShip(in);
-            if (s != null)
+            if (s != null) {
                 for (int i = 0; i < NUMBER_SHOTS; i++) {
                     Position p = readPosition(in);
                     LOGGER.info("{} {}", p, s.occupies(p));
                 }
+            }
         }
     }
 
     /**
-     * This task tests the building up of fleets
+     * Tarefa B: Testa a construção e gestão básica de frotas.
+     * <p>
+     * Aceita comandos da consola para criar frotas ({@code "nova"}) ou verificar 
+     * o seu estado ({@code "estado"}) até que o utilizador desista ({@code "desisto"}).
+     * </p>
      */
     public static void taskB() {
         Scanner in = new Scanner(System.in);
@@ -69,15 +97,17 @@ public class Tasks {
                 default:
                     LOGGER.info("Que comando é esse??? Repete lá ...");
             }
-            // The other commands are unknown in this task
             command = in.next();
         }
         LOGGER.info(GOODBYE_MESSAGE);
     }
 
     /**
-     * This task tests the building up of fleets and takes into consideration the
-     * possibility of cheating
+     * Tarefa C: Testa a criação de frotas adicionando o comando de visualização completa ("batota").
+     * <p>
+     * Permite criar a frota, consultar o estado e exibir o mapeamento direto no logger
+     * através do comando {@code "mapa"}.
+     * </p>
      */
     public static void taskC() {
         Scanner in = new Scanner(System.in);
@@ -98,17 +128,19 @@ public class Tasks {
                 default:
                     LOGGER.info("Que comando é esse??? Repete lá ...");
             }
-            // The other commands are unknown in this task
             command = in.next();
         }
         LOGGER.info(GOODBYE_MESSAGE);
     }
 
     /**
-     * This task also tests the fighting element of a round of three shots
+     * Tarefa D: Simula o fluxo completo do jogo (combate).
+     * <p>
+     * Suporta a criação de frotas e jogos, consulta de estado, visualização da frota,
+     * visualização de tiros válidos no tabuleiro e realização de rodadas de disparos ({@code "rajada"}).
+     * </p>
      */
     public static void taskD() {
-
         Scanner in = new Scanner(System.in);
         IFleet fleet = null;
         IGame game = null;
@@ -150,16 +182,16 @@ public class Tasks {
     }
 
     /**
-     * This operation allows the build up of a fleet, given user data
+     * Constrói uma frota completa a partir dos dados introduzidos pelo utilizador.
      *
-     * @param in The scanner to read from
-     * @return The fleet that has been built
+     * @param in O {@link Scanner} utilizado para ler as definições dos navios.
+     * @return A frota {@link Fleet} construída com os navios adicionados com sucesso.
      */
     static Fleet buildFleet(Scanner in) {
         assert in != null;
 
         Fleet fleet = new Fleet();
-        int i = 0; // i represents the total of successfully created ships
+        int i = 0; // i representa o total de navios criados com sucesso
 
         while (i <= Fleet.FLEET_SIZE) {
             IShip s = readShip(in);
@@ -178,10 +210,11 @@ public class Tasks {
     }
 
     /**
-     * This operation reads data about a ship, build it and returns it
+     * Lê os dados referentes a um navio da consola (tipo, posição inicial e orientação),
+     * constrói o respetivo objeto e devolve-o.
      *
-     * @param in The scanner to read from
-     * @return The created ship based on the data that has been read
+     * @param in O {@link Scanner} a utilizar para a leitura.
+     * @return O navio {@link Ship} instanciado, ou {@code null} se o tipo/dados forem inválidos.
      */
     static Ship readShip(Scanner in) {
         String shipKind = in.next();
@@ -192,10 +225,10 @@ public class Tasks {
     }
 
     /**
-     * This operation allows reading a position in the map
+     * Lê um par de coordenadas (linha e coluna) da consola e devolve a posição correspondente.
      *
-     * @param in The scanner to read from
-     * @return The position that has been read
+     * @param in O {@link Scanner} a utilizar para a leitura.
+     * @return A posição {@link Position} lida.
      */
     static Position readPosition(Scanner in) {
         int row = in.nextInt();
@@ -204,11 +237,10 @@ public class Tasks {
     }
 
     /**
-     * This operation allows firing a round of shots (three) over a fleet, in the
-     * context of a game
+     * Executa uma rodada de ataques (constituída por 3 disparos) sobre a frota no contexto do jogo.
      *
-     * @param in   The scanner to read from
-     * @param game The context game while fleet is being attacked
+     * @param in   O {@link Scanner} a utilizar para ler as posições dos tiros.
+     * @param game O jogo {@link IGame} em curso no qual os tiros serão efetuados.
      */
     static void firingRound(Scanner in, IGame game) {
         for (int i = 0; i < NUMBER_SHOTS; i++) {
@@ -217,7 +249,5 @@ public class Tasks {
             if (sh != null)
                 LOGGER.info("Mas... mas... {}s nao sao a prova de bala? :-(", sh.getCategory());
         }
-
     }
-
 }

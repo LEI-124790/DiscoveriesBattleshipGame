@@ -101,4 +101,3 @@ public class Caravel extends Ship {
         return SIZE;
     }
 }
-
