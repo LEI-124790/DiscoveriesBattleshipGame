@@ -1,3 +1,7 @@
+package iscteiul.ista.battleship;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 /**
  * Represents a ship in the Battleship game.
  *
@@ -9,6 +13,8 @@
  * boundaries, checking occupied positions, detecting nearby ships, and
  * processing shots.</p>
  */
+
+
 public abstract class Ship implements IShip {
 
     private static final String GALEAO = "galeao";
