@@ -49,8 +49,7 @@ Basic academic version of Battleship game to build upon.
 
 `Fotos`:
 * Galeão: <img width="1024" height="775" alt="image" src="https://github.com/user-attachments/assets/2f5462d6-27e2-43a1-a125-2b9381063b2f" />
-
-* Fragata: https://pt.wikipedia.org/wiki/Dom_Fernando_II_e_Gl%C3%B3ria_%28UAM203%29#/media/Ficheiro:20121026_0433_Almada_&_Cacilhas_05.jpg
+* Fragata: <img width="1920" height="1441" alt="image" src="https://github.com/user-attachments/assets/2ccc097a-2afe-4a29-bc70-76ee32386ccd" />
 * Nau: <img width="800" height="547" alt="image" src="https://github.com/user-attachments/assets/c09db785-16ad-49bc-a8ea-ccd8205e2bfe" />
 * Caravela: <img width="650" height="434" alt="image" src="https://github.com/user-attachments/assets/7464dd3b-5d25-4423-9209-da415c554546" />
 * Barca: <img width="805" height="787" alt="image" src="https://github.com/user-attachments/assets/9686b762-f01a-45d8-965d-00a5db8e0144" />
