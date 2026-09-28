@@ -43,10 +43,16 @@ Basic academic version of Battleship game to build upon.
 * Caravela: https://pt.wikipedia.org/wiki/Caravela
 * Barca: https://pt.wikipedia.org/wiki/Barca
 
+---
+
+# Fotos dos navios
+
 `Fotos`:
-* Galeão: https://www.museuvirtualdalusofonia.com/wp-content/uploads/2017/10/618-30725-MO-lV-19-Gale%C3%A3o-do-S%C3%A9c-1024x775.jpg
+* Galeão: <img width="1024" height="775" alt="image" src="https://github.com/user-attachments/assets/2f5462d6-27e2-43a1-a125-2b9381063b2f" />
+
 * Fragata: https://pt.wikipedia.org/wiki/Dom_Fernando_II_e_Gl%C3%B3ria_%28UAM203%29#/media/Ficheiro:20121026_0433_Almada_&_Cacilhas_05.jpg
-* Nau: https://www.passaronoombro.com/wp-content/uploads/2023/12/Nau-que-pertenceu-as-armadas-de-Vasco-da-Gama-1502-D.-Francisco-de-Almeida-1505-e-Afonso-de-Albuquerque-1510.-Tomou-parte-na-conquista-de-Ormuz-1507.-Imagem-Marinha-Portuguesa.jpg
-* Caravela: https://ncultura.pt/wp-content/uploads/2017/11/A-historia-das-caravelas-portuguesas-000.jpg
-* Barca: https://image.slidesharecdn.com/embarcaesportuguesasdescobrimentos-130601033719-phpapp01/75/Embarcacoes-portuguesas-dos-descobrimentos-5-ano-5-2048.jpg
+* Nau: <img width="800" height="547" alt="image" src="https://github.com/user-attachments/assets/c09db785-16ad-49bc-a8ea-ccd8205e2bfe" />
+* Caravela: <img width="650" height="434" alt="image" src="https://github.com/user-attachments/assets/7464dd3b-5d25-4423-9209-da415c554546" />
+* Barca: <img width="805" height="787" alt="image" src="https://github.com/user-attachments/assets/9686b762-f01a-45d8-965d-00a5db8e0144" />
+
 
