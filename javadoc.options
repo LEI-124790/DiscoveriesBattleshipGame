@@ -1,0 +1,17 @@
+-locale en
+-d docs
+-sourcepath src/main/java
+-subpackages iscteiul.ista
+-classpath target/javadoc-dependencies/log4j-api-2.25.2.jar
+--release 17
+-encoding UTF-8
+-docencoding UTF-8
+-charset UTF-8
+-private
+-use
+-linksource
+-author
+-version
+-notimestamp
+--no-platform-links
+-Xdoclint:all,-missing
