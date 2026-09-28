@@ -5,48 +5,40 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Classe utilitária que contém a lógica de execução e os modos de teste (tarefas)
- * para o jogo Batalha Naval (Battleship).
- * <p>
- * Inclui rotinas para leitura e construção de navios, frotas, posições e simulação
- * de rodadas de disparos via consola.
- * </p>
+ * Provides console exercises for creating ships, assembling fleets and playing
+ * firing rounds. Commands and ship categories are read from standard input;
+ * positions are entered as integer row and column pairs followed, for ships,
+ * by a bearing character understood by {@link Compass}.
  *
- * @author fba
+ * <p>The exercises progress from individual ship checks in {@link #taskA()}
+ * to a game with three-shot rounds in {@link #taskD()}.</p>
  */
 public class Tasks {
-
-    /**
-     * Logger para o registo de mensagens e eventos da aplicação.
-     */
+    /** Logger for command feedback and game statistics. */
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     * Número de disparos efetuados por cada rodada de ataques ("rajada").
-     */
+    /** Number of positions checked or fired at in each round. */
     private static final int NUMBER_SHOTS = 3;
 
+    /** Farewell printed when the player gives up. */
+    private static final String GOODBYE_MESSAGE = "Bons ventos!";
+
     /**
-     * Mensagem de despedida apresentada ao encerrar a execução.
+     * Command for creating a new fleet.
      */
     private static final String GOODBYE_MESSAGE = "Bons ventos!";
 
     /** Comando do utilizador para criar e inicializar uma nova frota. */
     private static final String NOVAFROTA = "nova";
-
-    /** Comando do utilizador para encerrar a tarefa / desistir do jogo. */
+    /** Command for ending the current exercise. */
     private static final String DESISTIR = "desisto";
-
-    /** Comando do utilizador para efetuar uma rodada de disparos (rajada). */
+    /** Command for firing a round of three shots. */
     private static final String RAJADA = "rajada";
-
-    /** Comando do utilizador para visualizar no mapa os tiros válidos efetuados. */
+    /** Command for displaying recorded valid shots. */
     private static final String VERTIROS = "ver";
-
-    /** Comando do utilizador para exibir a posição real de todos os navios (batota). */
+    /** Command for revealing the fleet. */
     private static final String BATOTA = "mapa";
-
-    /** Comando do utilizador para consultar o estado atual da frota. */
+    /** Command for printing the fleet's status. */
     private static final String STATUS = "estado";
 
 

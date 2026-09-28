@@ -1,11 +1,13 @@
-/**
- *
- */
 package iscteiul.ista.battleship;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages ships on a square board and validates their placement when added.
+ * Ships must lie within the board and cannot overlap or touch, even diagonally.
+ * The fleet also supports category filtering, position lookup and status output.
+ */
 public class Fleet implements IFleet {
     /**
      * This operation prints all the given ships
@@ -19,21 +21,27 @@ public class Fleet implements IFleet {
 
     // -----------------------------------------------------
 
+    /** Ships in insertion order, including ships that have been sunk. */
     private List<IShip> ships;
 
+    /** Creates an empty fleet. */
     public Fleet() {
         ships = new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<IShip> getShips() {
         return ships;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      *
-     * @see battleship.IFleet#addShip(battleship.IShip)
+     * <p>The capacity check accepts an insertion while the existing number of
+     * ships is less than or equal to {@link #FLEET_SIZE}.</p>
      */
     @Override
     public boolean addShip(IShip s) {
@@ -45,10 +53,8 @@ public class Fleet implements IFleet {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IFleet#getShipsLike(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public List<IShip> getShipsLike(String category) {
@@ -60,10 +66,8 @@ public class Fleet implements IFleet {
         return shipsLike;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IFleet#getFloatingShips()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public List<IShip> getFloatingShips() {
@@ -75,10 +79,8 @@ public class Fleet implements IFleet {
         return floatingShips;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IFleet#shipAt(battleship.IPosition)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public IShip shipAt(IPosition pos) {
@@ -88,11 +90,23 @@ public class Fleet implements IFleet {
         return null;
     }
 
+    /**
+     * Checks that all ship boundaries fall within the board's zero-based indices.
+     *
+     * @param s the ship whose placement is checked
+     * @return {@code true} if all occupied positions are inside the board
+     */
     private boolean isInsideBoard(IShip s) {
         return (s.getLeftMostPos() >= 0 && s.getRightMostPos() <= BOARD_SIZE - 1 && s.getTopMostPos() >= 0
                 && s.getBottomMostPos() <= BOARD_SIZE - 1);
     }
 
+    /**
+     * Checks whether a proposed ship overlaps or touches a ship already in the fleet.
+     *
+     * @param s the proposed ship
+     * @return {@code true} if an overlap or adjacency, including diagonal contact, exists
+     */
     private boolean colisionRisk(IShip s) {
         for (int i = 0; i < ships.size(); i++) {
             if (ships.get(i).tooCloseTo(s))
