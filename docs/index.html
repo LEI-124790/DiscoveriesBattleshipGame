@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Project guide for the Java Battleship academic application: setup, console commands, fleet rules, architecture, Git workflow, and current limitations.">
+  <meta name="color-scheme" content="light">
+  <title>Battleship — Project documentation</title>
+  <style>
+    :root { --ink: #172d3b; --muted: #526773; --navy: #112f40; --teal: #006c67; --paper: #f5f6f3; --line: #d8e1e3; --white: #fff; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.7 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    a { color: var(--teal); text-underline-offset: 3px; }
+    a:hover { text-decoration-thickness: 2px; }
+    a:focus-visible { outline: 3px solid #bd6600; outline-offset: 4px; border-radius: 2px; }
+    .skip { position: absolute; left: 16px; top: -100px; z-index: 10; padding: 12px 20px; background: var(--white); }
+    .skip:focus { top: 12px; }
+    .layout { display: grid; grid-template-columns: 248px minmax(0, 1fr); max-width: 1512px; margin: auto; }
+    .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 38px 26px; border-right: 1px solid var(--line); }
+    .brand { display: block; color: var(--navy); font-size: 23px; font-weight: 800; text-decoration: none; letter-spacing: -.7px; }
+    .eyebrow { margin: 0 0 14px; font-size: 12px; font-weight: 750; letter-spacing: .15em; text-transform: uppercase; }
+    .sidebar .eyebrow { color: var(--muted); margin-top: 4px; letter-spacing: .1em; }
+    nav { margin-top: 38px; }
+    nav ol { list-style: none; padding: 0; margin: 0; }
+    nav a { display: flex; gap: 12px; padding: 9px 0; text-decoration: none; color: var(--muted); font-size: 14px; }
+    nav a:hover { color: var(--teal); }
+    nav span { font-size: 11px; padding-top: 3px; color: var(--teal); font-weight: 750; }
+    .sidebar-note { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 20px; font-size: 12px; color: var(--muted); }
+    main { min-width: 0; padding: 32px 48px 50px; }
+    .hero { position: relative; overflow: hidden; background: var(--navy); color: #fff; border-radius: 16px; padding: 44px 42px; }
+    .hero::after { content: ""; position: absolute; top: -28px; right: -45px; width: 235px; height: 235px; transform: rotate(14deg); background-image: linear-gradient(#ffffff10 1px, transparent 1px), linear-gradient(90deg, #ffffff10 1px, transparent 1px); background-size: 27px 27px; pointer-events: none; }
+    .hero .eyebrow { color: #a7dcd5; }
+    h1 { position: relative; z-index: 1; font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.05em; margin: 0 0 19px; }
+    .hero p:not(.eyebrow) { position: relative; z-index: 1; max-width: 620px; margin: 0; color: #d9e7ec; font-size: 18px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 27px; }
+    .tag { border: 1px solid #587482; border-radius: 30px; padding: 4px 11px; font-size: 12px; color: #e1eeef; }
+    .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0 36px; }
+    .fact { padding: 16px 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); }
+    .fact strong { display: block; font-size: 24px; line-height: 1.3; letter-spacing: -.04em; }
+    .fact span { font-size: 12px; color: var(--muted); }
+    section { margin-top: 44px; }
+    h2 { display: flex; align-items: baseline; gap: 14px; margin: 0 0 16px; font-size: 26px; letter-spacing: -.03em; line-height: 1.3; }
+    h2 .number { font-size: 12px; color: var(--teal); letter-spacing: .04em; }
+    h3 { margin: 25px 0 10px; font-size: 18px; letter-spacing: -.02em; }
+    p { margin: 0 0 15px; }
+    ul, ol { padding-left: 23px; }
+    li { margin: 6px 0; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; }
+    code { font-size: .87em; background: #e8eeed; padding: 2px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+    pre { background: #102b3a; color: #e2f0f2; padding: 20px 22px; border-radius: 10px; overflow-x: auto; font-size: 13px; line-height: 1.7; tab-size: 2; }
+    pre code { padding: 0; background: none; font-size: inherit; color: inherit; overflow-wrap: normal; }
+    .caption { color: var(--muted); font-size: 13px; }
+    .callout { padding: 17px 20px; border-left: 4px solid var(--teal); border-radius: 0 9px 9px 0; background: #e8f1ee; margin: 20px 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .warning { background: #fbefda; border-color: #ad6500; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--white); margin: 17px 0; }
+    .table-wrap:focus-visible { outline: 3px solid #bd6600; outline-offset: 3px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+    caption { text-align: left; padding: 12px 16px; font-weight: 700; color: var(--muted); font-size: 12px; }
+    th, td { padding: 12px 16px; border-top: 1px solid var(--line); vertical-align: top; }
+    thead { background: #edf2f1; }
+    th { font-weight: 650; }
+    tbody th { white-space: nowrap; }
+    .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .card { min-width: 0; border: 1px solid var(--line); background: var(--white); border-radius: 10px; padding: 20px; }
+    .card h3 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+    .flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; list-style: none; padding: 0; }
+    .flow li { border-top: 3px solid var(--teal); padding: 15px; background: var(--white); border-radius: 0 0 8px 8px; font-size: 13px; }
+    .flow strong { display: block; font-size: 15px; margin-bottom: 6px; }
+    .issue-list { padding: 0; list-style: none; }
+    .issue-list li { padding: 16px 0; border-bottom: 1px solid var(--line); margin: 0; }
+    .issue-list strong { display: block; margin-bottom: 4px; }
+    footer { margin-top: 46px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 214px minmax(0, 1fr); }
+      main { padding: 25px; }
+      .sidebar { padding: 30px 20px; }
+      .hero { padding: 32px; }
+    }
+    @media (max-width: 800px) {
+      html { scroll-padding-top: 16px; }
+      .layout { display: block; }
+      .sidebar { position: static; height: auto; padding: 20px 22px; border-right: 0; border-bottom: 1px solid var(--line); }
+      nav { margin-top: 16px; }
+      nav ol { display: flex; flex-wrap: wrap; gap: 0 18px; }
+      nav a { padding: 5px 0; }
+      nav span, .sidebar-note { display: none; }
+      main { padding: 22px; }
+      .hero { padding: 30px 25px; }
+      .columns, .flow { grid-template-columns: 1fr; }
+      h2 { font-size: 24px; }
+    }
+    @media (max-width: 460px) {
+      main { padding: 16px; }
+      .facts { gap: 8px; }
+      .fact { padding: 12px 10px; }
+      .fact strong { font-size: 20px; }
+      .fact span { font-size: 11px; }
+      th, td { padding: 10px 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      body { background: #fff; font-size: 10pt; }
+      .layout { display: block; }
+      .sidebar, .skip, footer a { display: none; }
+      main { padding: 0; }
+      .hero { background: #fff; color: #000; padding: 0; }
+      .hero p:not(.eyebrow), .hero .eyebrow, .tag { color: #333; }
+      .hero::after { display: none; }
+      .tag { border-color: #888; }
+      section { margin-top: 24px; }
+      h2, h3 { break-after: avoid; }
+      tr, .card, .callout { break-inside: avoid; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f2f2f2; color: #000; }
+      .table-wrap { overflow: visible; }
+      a { color: #000; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to documentation</a>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Documentation navigation">
+      <a class="brand" href="#overview">Battleship<span aria-hidden="true">.</span></a>
+      <p class="eyebrow">Project field guide</p>
+      <nav aria-label="Contents">
+        <ol>
+          <li><a href="#overview"><span>01</span> Overview</a></li>
+          <li><a href="#setup"><span>02</span> Build &amp; run</a></li>
+          <li><a href="#console"><span>03</span> Console guide</a></li>
+          <li><a href="#fleet"><span>04</span> Ships &amp; placement</a></li>
+          <li><a href="#architecture"><span>05</span> Architecture</a></li>
+          <li><a href="#source"><span>06</span> Repository map</a></li>
+          <li><a href="#git"><span>07</span> Git commands &amp; workflow</a></li>
+          <li><a href="#quality"><span>08</span> Tests &amp; limitations</a></li>
+          <li><a href="#team"><span>09</span> Project team</a></li>
+        </ol>
+      </nav>
+      <p class="sidebar-note">Bolinha de Canhão<br>LEI · Engenharia Informática<br><br>Self-contained documentation.<br>Open this file in any browser.</p>
+    </aside>
+
+    <main id="main">
+      <header class="hero">
+        <p class="eyebrow">Java / Academic project</p>
+        <h1>Battleship</h1>
+        <p>A console application for building fleets, checking ship placement, and firing at a naval battlefield. An object-oriented foundation for the game of Batalha Naval.</p>
+        <div class="tags" aria-label="Project technologies">
+          <span class="tag">Java</span><span class="tag">Maven</span><span class="tag">Log4j 2</span><span class="tag">1.0-SNAPSHOT</span>
+        </div>
+      </header>
+
+      <div class="facts" aria-label="Project at a glance">
+        <div class="fact"><strong>10 × 10</strong><span>board, indexed 0–9</span></div>
+        <div class="fact"><strong>5 types</strong><span>of Portuguese ships</span></div>
+        <div class="fact"><strong>4 tasks</strong><span>console exercises A–D</span></div>
+      </div>
+
+      <section id="overview" aria-labelledby="overview-title">
+        <h2 id="overview-title"><span class="number">01</span> Overview</h2>
+        <p>This repository contains an academic Battleship implementation by <strong>Bolinha de Canhão</strong>. Its domain model represents coordinates, ships, fleets, and a game’s firing history. Console exercises gradually introduce ship inspection, fleet management, and combat against a single fleet.</p>
+        <p>The entry point is <a href="../src/main/java/iscteiul/ista/App.java"><code>iscteiul.ista.App</code></a>. It currently calls <code>Tasks.taskB()</code>, so the default program manages fleets. Switch that call to <code>Tasks.taskD()</code> to enable firing rounds; there is no command-line mode selector.</p>
+        <div class="callout">
+          <p><strong>Rules and implementation.</strong> The <a href="../README.md">README</a> describes a traditional two-player game with lettered coordinates and extra shots after a hit. The implemented exercises use integer coordinates, and task D fires three shots per round at one fleet. Player alternation is not implemented.</p>
+        </div>
+      </section>
+
+      <section id="setup" aria-labelledby="setup-title">
+        <h2 id="setup-title"><span class="number">02</span> Build &amp; run</h2>
+        <p>Use a Java JDK and an installed Maven command. No Maven wrapper executable is checked in. Run the following commands from the repository root.</p>
+        <div class="callout warning">
+          <p><strong>Build configuration needs repair first.</strong> The checked-in <a href="../pom.xml"><code>pom.xml</code></a> is missing <code>&lt;/dependencies&gt;</code> before <code>&lt;reporting&gt;</code>, so Maven cannot parse it. It also mixes <code>maven.compiler.release=17</code> with <code>source/target=25</code>. Align the Java settings and select compatible compiler and test plugin versions before using the commands below. These are the intended workflow, not a verified successful build of the current checkout.</p>
+        </div>
+        <h3>Compile and start the console</h3>
+        <pre><code>java -version
+mvn -version
+mvn compile dependency:copy-dependencies -DincludeScope=runtime
+java -ea -cp "target/classes:target/dependency/*" iscteiul.ista.App</code></pre>
+        <p class="caption">The launch command uses the macOS/Linux classpath separator. On Windows, use <code>target/classes;target/dependency/*</code>. The <code>-ea</code> flag enables the model’s Java assertions. Enter <code>desisto</code> to leave tasks B, C, or D.</p>
+        <h3>Tests and packaging</h3>
+        <pre><code>mvn test
+mvn package</code></pre>
+        <p>The test source also needs the JUnit migration described under <a href="#quality">Tests &amp; limitations</a>. The intended package is <code>target/Battleship-1.0-SNAPSHOT.jar</code>; the POM does not configure an executable JAR or bundle runtime dependencies.</p>
+        <div class="table-wrap" role="region" aria-label="Declared dependencies" tabindex="0">
+          <table>
+            <caption>Dependencies declared in pom.xml</caption>
+            <thead><tr><th scope="col">Dependency</th><th scope="col">Version</th><th scope="col">Purpose</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>log4j-core</code></th><td>2.25.2</td><td>Console feedback and game statistics; compile scope.</td></tr>
+              <tr><th scope="row"><code>junit-jupiter</code></th><td>6.0.0, via <code>junit-bom</code></td><td>Declared test framework; test scope.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="console" aria-labelledby="console-title">
+        <h2 id="console-title"><span class="number">03</span> Console guide</h2>
+        <p><a href="../src/main/java/iscteiul/ista/battleship/Tasks.java"><code>Tasks</code></a> reads whitespace-separated tokens from standard input. Commands and ship names are lowercase and case-sensitive. Newlines make input easier to read but do not delimit commands.</p>
+        <div class="table-wrap" role="region" aria-label="Exercise modes" tabindex="0">
+          <table>
+            <caption>Select one task in App.main()</caption>
+            <thead><tr><th scope="col">Task</th><th scope="col">Behavior</th><th scope="col">Accepted input</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">A</th><td>Construct a ship and check whether it occupies three positions; repeat until end of input.</td><td>A ship definition followed by three coordinate pairs. No command loop.</td></tr>
+              <tr><th scope="row">B · default</th><td>Build fleets and inspect their status.</td><td><code>nova</code>, <code>estado</code>, <code>desisto</code></td></tr>
+              <tr><th scope="row">C</th><td>Task B plus logging the fleet object. Its <code>mapa</code> does not render a board.</td><td>B commands plus <code>mapa</code></td></tr>
+              <tr><th scope="row">D</th><td>Build a fleet and game, fire rounds, and render boards.</td><td>C commands plus <code>rajada</code>, <code>ver</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrap" role="region" aria-label="Console command reference" tabindex="0">
+          <table>
+            <caption>Command reference</caption>
+            <thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>nova</code></th><td>Read ship definitions until 11 placements succeed. Replace the current fleet; task D also creates a fresh game and resets statistics.</td></tr>
+              <tr><th scope="row"><code>estado</code></th><td>Print all ships, floating ships, then ships grouped by category. Ships appear in multiple groups.</td></tr>
+              <tr><th scope="row"><code>mapa</code></th><td>In D, reveal ships as <code>#</code> on a board of <code>.</code> cells. In C, log the fleet’s default object representation.</td></tr>
+              <tr><th scope="row"><code>rajada r1 c1 r2 c2 r3 c3</code></th><td>In D, fire three shots, then report hits, invalid shots, repeated shots, and remaining ships.</td></tr>
+              <tr><th scope="row"><code>ver</code></th><td>In D, show all valid, non-repeated shot coordinates as <code>X</code>; hits and misses use the same marker.</td></tr>
+              <tr><th scope="row"><code>desisto</code></th><td>Exit B, C, or D and log <code>Bons ventos!</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Input format</h3>
+        <pre><code>ship-name row column bearing
+
+caravela 4 4 e</code></pre>
+        <p>This example occupies <code>(4, 4)</code> and <code>(4, 5)</code>. Use integer coordinates from <code>0</code> to <code>9</code>. Bearings are <code>n</code> (north), <code>s</code> (south), <code>e</code> (east), and <code>o</code> (west, Portuguese <em>oeste</em>).</p>
+        <h3>A complete task B session</h3>
+        <p>After the build prerequisites are resolved, enter this fleet and its commands into the running application. All 11 placements fit the board and leave space between ships.</p>
+        <pre><code>nova
+galeao 0 0 n
+fragata 0 4 e
+nau 2 4 e
+nau 4 0 e
+caravela 4 4 e
+caravela 4 7 e
+caravela 6 0 e
+barca 6 3 n
+barca 6 5 n
+barca 6 7 n
+barca 8 0 n
+estado
+desisto</code></pre>
+        <p>For task D, use the same fleet and insert the following before <code>desisto</code>. The two barges at <code>(6, 3)</code> and <code>(6, 5)</code> sink; <code>(9, 9)</code> is a miss. The round leaves nine ships afloat with two hits and no invalid or repeated shots.</p>
+        <pre><code>mapa
+rajada 6 3 6 5 9 9
+ver</code></pre>
+        <p class="caption">Finish entering the fleet before sending other commands. The current builder waits for 11 successful additions; a rejected placement requires another ship definition.</p>
+      </section>
+
+      <section id="fleet" aria-labelledby="fleet-title">
+        <h2 id="fleet-title"><span class="number">04</span> Ships &amp; placement</h2>
+        <p>The README’s fleet has 11 ships occupying 25 cells. The code supports those types but does not enforce the number of ships in each category.</p>
+        <div class="table-wrap" role="region" aria-label="Ship types" tabindex="0">
+          <table>
+            <caption>Fleet composition described in README.md</caption>
+            <thead><tr><th scope="col">Ship / Java class</th><th scope="col">Input token</th><th scope="col">Cells</th><th scope="col">Quantity</th><th scope="col">Implemented shape</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Galleon.java">Galeão / Galleon</a></th><td><code>galeao</code></td><td>5</td><td>1</td><td>T shape</td></tr>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Frigate.java">Fragata / Frigate</a></th><td><code>fragata</code></td><td>4</td><td>1</td><td>Straight line</td></tr>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Carrack.java">Nau / Carrack</a></th><td><code>nau</code></td><td>3</td><td>2</td><td>Straight line</td></tr>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Caravel.java">Caravela / Caravel</a></th><td><code>caravela</code></td><td>2</td><td>3</td><td>Straight line</td></tr>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Barge.java">Barca / Barge</a></th><td><code>barca</code></td><td>1</td><td>4</td><td>Single cell</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="columns">
+          <div class="card">
+            <h3>Placement constraints</h3>
+            <p><code>Fleet.addShip()</code> checks capacity, board boundaries, and proximity. Ships cannot overlap or touch, including diagonally. A ship remains afloat until all of its cells have been hit.</p>
+          </div>
+          <div class="card">
+            <h3>Orientation behavior</h3>
+            <p>For straight ships, both <code>n</code> and <code>s</code> extend toward increasing rows; both <code>e</code> and <code>o</code> extend toward increasing columns. A barge stores its bearing without changing its shape.</p>
+          </div>
+        </div>
+        <h3>The galleon’s four orientations</h3>
+        <p>The bearing selects the side with the three-cell bar. The reference coordinate is the leftmost occupied cell in the top row. East and south can occupy columns to its left on lower rows.</p>
+        <pre aria-label="Galleon shapes: north has a top bar, south a bottom bar, east a right bar, and west a left bar."><code>North (n)   South (s)   East (e)    West (o)
+###         .#.         ..#         #..
+.#.         .#.         ###         ###
+.#.         ###         ..#         #..</code></pre>
+      </section>
+
+      <section id="architecture" aria-labelledby="architecture-title">
+        <h2 id="architecture-title"><span class="number">05</span> Architecture</h2>
+        <p>Application startup lives in <code>iscteiul.ista</code>; the game model and console exercises live in <code>iscteiul.ista.battleship</code>. The domain is separated through four interfaces: <code>IGame</code>, <code>IFleet</code>, <code>IShip</code>, and <code>IPosition</code>.</p>
+        <ol class="flow" aria-label="Application layers">
+          <li><strong>1. Console</strong><code>App → Tasks</code><br>Select an exercise, parse commands, construct fleets and games, and print feedback.</li>
+          <li><strong>2. Game &amp; fleet</strong><code>Game → IFleet</code><br>Record shots and statistics. Find ships and validate their placement.</li>
+          <li><strong>3. Ships &amp; coordinates</strong><code>Ship → IPosition</code><br>Build shapes, detect contact, and track damage at individual cells.</li>
+        </ol>
+        <div class="table-wrap" role="region" aria-label="Core classes" tabindex="0">
+          <table>
+            <caption>Core responsibilities and useful methods</caption>
+            <thead><tr><th scope="col">Type</th><th scope="col">Responsibility</th><th scope="col">Key methods</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Game.java">Game</a></th><td>Shot history, hit/invalid/repeated/sunk counters, and board rendering.</td><td><code>fire()</code>, <code>getRemainingShips()</code>, <code>printValidShots()</code></td></tr>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Fleet.java">Fleet</a></th><td>Ship collection, bounds and contact checks, filtering, and status.</td><td><code>addShip()</code>, <code>shipAt()</code>, <code>getFloatingShips()</code></td></tr>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Ship.java">Ship</a></th><td>Abstract shared implementation with a factory and five concrete shape subclasses.</td><td><code>buildShip()</code> (package-private), <code>occupies()</code>, <code>tooCloseTo()</code>, <code>shoot()</code></td></tr>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Position.java">Position</a></th><td>Row, column, and mutable hit/occupancy flags. Equality compares coordinates.</td><td><code>equals()</code>, <code>isAdjacentTo()</code>, <code>shoot()</code></td></tr>
+              <tr><th scope="row"><a href="../src/main/java/iscteiul/ista/battleship/Compass.java">Compass</a></th><td>Cardinal bearings and an <code>UNKNOWN</code> value for unrecognized input.</td><td><code>charToCompass()</code> (package-private), <code>getDirection()</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>What happens when a shot is fired?</h3>
+        <ol>
+          <li><code>Game.fire(position)</code> validates the coordinates. A rejected shot increments the invalid counter.</li>
+          <li>A previously recorded coordinate increments the repeated counter and causes no further damage.</li>
+          <li>A new valid position enters the shot history. The fleet looks for a ship at those coordinates.</li>
+          <li>If a ship is present, its matching cell is marked hit and the hit counter increases.</li>
+          <li>If no unhit cells remain, the sunk counter increases and <code>fire()</code> returns that ship. All other outcomes return <code>null</code>.</li>
+        </ol>
+        <p class="caption">Use the counters to distinguish a miss from a hit that does not sink a ship. Board validity currently has an upper-bound defect described below.</p>
+      </section>
+
+      <section id="source" aria-labelledby="source-title">
+        <h2 id="source-title"><span class="number">06</span> Repository map</h2>
+        <pre><code>ES1/
+├── README.md                  Project, team, and intended game rules
+├── pom.xml                    Maven coordinates and dependencies
+├── docs/index.html            This guide
+├── src/main/java/iscteiul/ista/
+│   ├── App.java               Console entry point
+│   └── battleship/            Model, interfaces, ship types, and Tasks
+├── src/main/resources/
+│   └── log4j2.xml             Console logger configuration
+├── src/test/java/iscteiul/ista/
+│   └── AppTest.java           Legacy placeholder test
+├── src/site/site.xml          Maven site configuration
+├── .mvn/                      Maven/JVM configuration files
+└── .github/                   Label definitions and sync workflow</code></pre>
+        <p><a href="../src/main/resources/log4j2.xml"><code>log4j2.xml</code></a> configures INFO-level console logging with a timestamp, thread, level, logger, and message. Tasks uses Log4j; board rendering and fleet status also write directly to standard output.</p>
+        <p><a href="../src/site/site.xml"><code>src/site/site.xml</code></a> configures a Maven site using the Fluido skin. This HTML guide is independent of that site: it needs no build step, JavaScript, remote fonts, or network connection. Source links work when opened within the repository; publishing only <code>docs/</code> will not include those source files.</p>
+      </section>
+
+      <section id="git" aria-labelledby="git-title">
+        <h2 id="git-title"><span class="number">07</span> Git commands &amp; workflow</h2>
+        <p>The repository history shows contributors working on branches such as <code>LEI-124790-Javadoc</code>, <code>pedro-javadoc</code>, and <code>alfena</code>, bringing changes from <code>main</code> into their branches, and integrating work through pull-request merge commits.</p>
+        <div class="callout">
+          <p><strong>Reading the history.</strong> These commands describe a possible workflow consistent with the project’s commit graph. Git records commits and their parents, not the exact terminal commands or IDE actions used to create them. The examples below are instructions; they have not been executed to change this repository.</p>
+        </div>
+
+        <h3>1. Clone and inspect the project</h3>
+        <p>For a new checkout, clone the repository and enter its directory. Skip this step if you already have the project locally.</p>
+        <pre><code>git clone https://github.com/LEI-124790/DiscoveriesBattleshipGame.git
+cd DiscoveriesBattleshipGame</code></pre>
+        <p class="caption">The inspected checkout is named <code>ES1</code>. Its <code>origin</code> uses <code>git@github-school:LEI-124790/DiscoveriesBattleshipGame.git</code>, which depends on a locally configured SSH host alias named <code>github-school</code>. The HTTPS example avoids that machine-specific alias.</p>
+        <div class="table-wrap" role="region" aria-label="Git inspection commands" tabindex="0">
+          <table>
+            <caption>Understand the working tree and commit graph</caption>
+            <thead><tr><th scope="col">Command</th><th scope="col">Purpose</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>git status</code></th><td>Show the current branch, staged changes, modified files, and untracked files.</td></tr>
+              <tr><th scope="row"><code>git remote -v</code></th><td>Show the fetch and push URLs for <code>origin</code>.</td></tr>
+              <tr><th scope="row"><code>git branch -avv</code></th><td>List local and remote-tracking branches, their commits, and tracking relationships.</td></tr>
+              <tr><th scope="row"><code>git log --all --graph --oneline --decorate</code></th><td>Display a terminal graph like the IDE history, including branch and tag labels.</td></tr>
+              <tr><th scope="row"><code>git diff</code></th><td>Review unstaged changes to tracked files. New, untracked files are not included.</td></tr>
+              <tr><th scope="row"><code>git diff --cached</code></th><td>Review the changes staged for the next commit, including newly added files.</td></tr>
+              <tr><th scope="row"><code>git show --stat bcadbdf</code></th><td>Inspect the summary of the existing <code>Fix Tasks.java</code> commit.</td></tr>
+              <tr><th scope="row"><code>git log --oneline -- src/main/java/iscteiul/ista/battleship/Tasks.java</code></th><td>Inspect commits affecting <code>Tasks.java</code> in the current branch’s history.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><code>HEAD</code> identifies the checked-out commit; a branch label names a movable pointer to a commit. <code>origin/main</code> is a local record of the remote branch at the last synchronization, not a live view of GitHub. Graph lines show ancestry; colors are chosen by the Git viewer.</p>
+
+        <h3>2. Start a branch for new work</h3>
+        <p>With a clean working tree, update local <code>main</code> and create a branch for this documentation. <code>docs/project-guide</code> is an example new branch name.</p>
+        <pre><code>git switch main
+git pull --ff-only origin main
+git switch -c docs/project-guide</code></pre>
+        <p><code>--ff-only</code> updates the branch only when no merge commit is needed; it stops if the histories have diverged. To resume an existing local branch instead, use <code>git switch LEI-124790-Javadoc</code>. If that branch exists only on the remote, first fetch and then use <code>git switch --track origin/LEI-124790-Javadoc</code>.</p>
+
+        <h3>3. Stage, commit, and push</h3>
+        <p>After editing the documentation on your branch, stage that file, review the staged content, and create a commit. Use the relevant source-file paths instead when working on Java changes.</p>
+        <pre><code>git status
+git add docs/index.html
+git diff --cached
+git commit -m "docs: add project documentation and Git workflow"
+git push -u origin docs/project-guide</code></pre>
+        <p><code>git add</code> prepares content for a commit; <code>git commit</code> records it locally; <code>git push</code> publishes the branch’s commits. The first push’s <code>-u</code> establishes the upstream so later pushes from that branch can use <code>git push</code>.</p>
+
+        <h3>4. Bring main into a working branch</h3>
+        <p>To incorporate teammates’ merged changes while keeping your branch active, fetch the remote history and merge <code>origin/main</code>. Commit or stash unfinished changes before merging.</p>
+        <pre><code>git switch docs/project-guide
+git fetch origin
+git merge origin/main</code></pre>
+        <p><code>git fetch</code> updates remote-tracking references without changing your working files. The merge combines the fetched main history with your branch. A merge commit is created when the histories have diverged; otherwise Git may fast-forward or report that the branch is already up to date.</p>
+        <p>If conflicts occur, list them, edit each affected file to resolve the competing changes, and stage the resolutions. For example, if <code>Tasks.java</code> is the conflicted file:</p>
+        <pre><code>git status
+git diff --name-only --diff-filter=U
+# Edit the conflicted files and remove conflict markers.
+git add src/main/java/iscteiul/ista/battleship/Tasks.java
+# Stage any other resolved files, then finish the merge.
+git merge --continue</code></pre>
+        <p>Use <code>git merge --abort</code> to cancel an in-progress merge instead. Once the merge completes and you have reviewed the result, publish the updated branch with <code>git push</code>.</p>
+
+        <h3>5. Open and merge a pull request</h3>
+        <p>On GitHub, open a pull request with <strong>base: main</strong> and <strong>compare: docs/project-guide</strong>. Review the changes and merge using <strong>Create a merge commit</strong> to preserve a graph like the project’s existing history. Pushing a branch alone does not open or merge a pull request.</p>
+        <p>If the GitHub CLI is installed and authenticated, the equivalent creation step is:</p>
+        <pre><code>gh pr create --base main --head docs/project-guide \
+  --title "Add project documentation" \
+  --body "Document setup, gameplay, architecture, and the Git workflow."
+gh pr view --web</code></pre>
+        <p class="caption"><code>gh</code> is a separate GitHub tool, not a Git subcommand. Review and merge the pull request on GitHub, then synchronize your local main branch:</p>
+        <pre><code>git switch main
+git pull --ff-only origin main
+git branch -d docs/project-guide</code></pre>
+        <p>The final command is optional cleanup: it deletes the merged local branch. It does not delete the branch on GitHub.</p>
+
+        <h3>How the commands relate to this project’s graph</h3>
+        <div class="table-wrap" role="region" aria-label="Commit graph examples" tabindex="0">
+          <table>
+            <caption>Examples from the inspected local history</caption>
+            <thead><tr><th scope="col">History entry</th><th scope="col">Possible operation</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>bcadbdf</code><br>Fix Tasks.java</th><td>Stage <code>Tasks.java</code> with <code>git add</code>, then run <code>git commit -m "Fix Tasks.java"</code> on the contributor branch.</td></tr>
+              <tr><th scope="row"><code>9f81ccc</code><br>Merge branch 'main' into LEI-124790-Javadoc</th><td>With local <code>main</code> updated, switch to <code>LEI-124790-Javadoc</code> and run <code>git merge main</code>. The result brings main’s changes into the contributor branch.</td></tr>
+              <tr><th scope="row"><code>4bbf282</code><br>Merge branch 'main' into pedro-javadoc</th><td>The same synchronization, performed on <code>pedro-javadoc</code>.</td></tr>
+              <tr><th scope="row"><code>89c6478</code><br>Merge pull request #21</th><td>Merge the <code>LEI-124790-Javadoc</code> pull request into <code>main</code> on GitHub. PR #20 integrates <code>pedro-javadoc</code>; PR #19 integrates <code>alfena</code>.</td></tr>
+              <tr><th scope="row"><code>b5192ef</code><br>Tag: v1</th><td>The tag names the <code>added javadoc to every file</code> commit. Inspect it with <code>git show v1</code> or list tags with <code>git tag --list</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="caption">The two merge directions serve different purposes: merging main into a contributor branch brings it up to date; merging a pull request into main integrates the contributor’s work.</p>
+
+        <h3>Other useful commands</h3>
+        <div class="table-wrap" role="region" aria-label="Additional Git commands" tabindex="0">
+          <table>
+            <caption>Review, temporarily save work, and mark milestones</caption>
+            <thead><tr><th scope="col">Command</th><th scope="col">When to use it</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>git diff origin/main...HEAD</code></th><td>Review branch changes since the common ancestor with the fetched main branch, similar to a pull-request diff.</td></tr>
+              <tr><th scope="row"><code>git restore --staged docs/index.html</code></th><td>Remove the documentation from staging while keeping its working-file changes.</td></tr>
+              <tr><th scope="row"><code>git stash push -u -m "Work in progress"</code></th><td>Temporarily save tracked changes and untracked files before changing branches. Ignored files are excluded.</td></tr>
+              <tr><th scope="row"><code>git stash list</code><br><code>git stash pop</code></th><td>List saved work, then restore the most recent stash on the intended branch. Resolve conflicts if necessary.</td></tr>
+              <tr><th scope="row"><code>git tag -a v2 -m "Second project milestone"</code><br><code>git push origin v2</code></th><td>When a new milestone is ready, create an annotated tag on the current commit and publish it. <code>v2</code> is an example new tag; the existing <code>v1</code> is unchanged.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="quality" aria-labelledby="quality-title">
+        <h2 id="quality-title"><span class="number">08</span> Tests &amp; limitations</h2>
+        <p>The only checked-in test, <a href="../src/test/java/iscteiul/ista/AppTest.java"><code>AppTest</code></a>, extends the legacy <code>junit.framework.TestCase</code> and asserts <code>true</code>. It does not exercise game behavior. The declared Jupiter dependency does not match those imports. The checked-in GitHub workflow synchronizes labels; it does not build or test the application.</p>
+        <ul class="issue-list">
+          <li><strong>Build and test configuration</strong>The POM’s missing closing tag prevents XML parsing. Its Java version settings disagree, and the legacy test needs migration to Jupiter or an appropriate legacy dependency. See <a href="#setup">Build &amp; run</a> before attempting a build.</li>
+          <li><strong>Fleet threshold and composition</strong><a href="../src/main/java/iscteiul/ista/battleship/IFleet.java"><code>IFleet.FLEET_SIZE</code></a> is <code>10</code>, but both <code>Fleet.addShip()</code> and <code>Tasks.buildFleet()</code> use <code>&lt;=</code> checks. The result is 11 accepted ships. This matches the README’s total by coincidence; category quotas are not enforced.</li>
+          <li><strong>Shot boundary validation</strong><code>Game.validShot()</code> accepts a row or column equal to <code>10</code>. Rendering uses a 10 × 10 array with indices <code>0–9</code>, so recording such a shot and then running <code>ver</code> can throw an array index exception.</li>
+          <li><strong>Input handling and game completion</strong>Malformed numbers, invalid ship bearings, or exhausted input can terminate an exercise with an exception. B–D expect <code>desisto</code> to exit. In D, sinking the final ship logs a message but does not leave the command loop.</li>
+          <li><strong>Task C map output</strong>Task C logs the fleet object, and <code>Fleet</code> has no custom <code>toString()</code>. Use task D’s <code>mapa</code> for a rendered board.</li>
+          <li><strong>Mutable collections and position hashing</strong><code>getShips()</code>, <code>getPositions()</code>, and <code>getShots()</code> expose their underlying mutable lists. External mutations can bypass validation. <code>Position.equals()</code> compares coordinates, while <code>hashCode()</code> also includes mutable flags, which can make hash-based collections behave incorrectly.</li>
+        </ul>
+        <h3>Useful next verification work</h3>
+        <p>After repairing the build, add behavioral coverage for ship geometry, diagonal separation, fleet capacity, coordinates at the board edges, repeated shots, sinking, and input errors. Resolve the intended fleet size and turn rules before treating the current exercise behavior as a complete game specification.</p>
+      </section>
+
+      <section id="team" aria-labelledby="team-title">
+        <h2 id="team-title"><span class="number">09</span> Project team</h2>
+        <p><strong>Bolinha de Canhão</strong> · LEI — Licenciatura Engenharia Informática. Team details are reproduced from the repository README.</p>
+        <div class="table-wrap" role="region" aria-label="Project team" tabindex="0">
+          <table>
+            <caption>Contributors listed in README.md</caption>
+            <thead><tr><th scope="col">Name</th><th scope="col">Student number</th><th scope="col">Username</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Luis Pacheco</th><td>124790</td><td>LEI-124790</td></tr>
+              <tr><th scope="row">Afonso Alfena</th><td>129821</td><td>LEI-129821</td></tr>
+              <tr><th scope="row">Pedro Figueiredo</th><td>129897</td><td>LEI-129897</td></tr>
+              <tr><th scope="row">Ruben Fonseca</th><td>129837</td><td>LEI-129837</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer>
+        <span>Battleship · Source-based project documentation · 28 September 2026</span>
+        <a href="#overview">Back to overview ↑</a>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
