@@ -1,18 +1,27 @@
-/**
- *
- */
 package iscteiul.ista.battleship;
 
 import java.util.Objects;
 
+/**
+ * Stores a pair of zero-based board coordinates with mutable occupancy and shot flags.
+ * Coordinates are not checked against board boundaries. Equality uses only the
+ * row and column, and adjacency includes overlapping and diagonal positions.
+ */
 public class Position implements IPosition {
+    /** Row coordinate. */
     private int row;
+    /** Column coordinate. */
     private int column;
+    /** Whether the position has been marked as occupied. */
     private boolean isOccupied;
+    /** Whether the position has received a shot. */
     private boolean isHit;
 
     /**
+     * Creates an unoccupied position that has not been shot.
      *
+     * @param row the zero-based row coordinate
+     * @param column the zero-based column coordinate
      */
     public Position(int row, int column) {
         this.row = row;
@@ -21,36 +30,34 @@ public class Position implements IPosition {
         this.isHit = false;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IPosition#getRow()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public int getRow() {
         return row;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IPosition#getColumn()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public int getColumn() {
         return column;
     }
 
-
+    /**
+     * Computes a hash from the coordinates and the current occupancy and shot flags.
+     *
+     * @return the hash of the current position state
+     */
     @Override
     public int hashCode() {
         return Objects.hash(column, isHit, isOccupied, row);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IPosition#equals(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean equals(Object otherPosition) {
@@ -64,56 +71,51 @@ public class Position implements IPosition {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IPosition#isAdjacentTo(battleship.IPosition)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean isAdjacentTo(IPosition other) {
         return (Math.abs(this.getRow() - other.getRow()) <= 1 && Math.abs(this.getColumn() - other.getColumn()) <= 1);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IPosition#occupy()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public void occupy() {
         isOccupied = true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IPosition#shoot()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public void shoot() {
         isHit = true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IPosition#isOccupied()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean isOccupied() {
         return isOccupied;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see battleship.IPosition#isHit()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean isHit() {
         return isHit;
     }
 
+    /**
+     * Returns the coordinates with the Portuguese labels {@code Linha} and {@code Coluna}.
+     *
+     * @return a description of the row and column
+     */
     @Override
     public String toString() {
         return ("Linha = " + row + " Coluna = " + column);

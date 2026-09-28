@@ -1,6 +1,3 @@
-/**
- *
- */
 package iscteiul.ista.battleship;
 
 import java.util.Scanner;
@@ -9,21 +6,38 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Provides console exercises for creating ships, assembling fleets and playing
+ * firing rounds. Commands and ship categories are read from standard input;
+ * positions are entered as integer row and column pairs followed, for ships,
+ * by a bearing character understood by {@link Compass}.
+ *
+ * <p>The exercises progress from individual ship checks in {@link #taskA()}
+ * to a game with three-shot rounds in {@link #taskD()}.</p>
+ */
 public class Tasks {
+    /** Logger for command feedback and game statistics. */
     private static final Logger LOGGER = LogManager.getLogger();
 
+    /** Number of positions checked or fired at in each round. */
     private static final int NUMBER_SHOTS = 3;
 
+    /** Farewell printed when the player gives up. */
     private static final String GOODBYE_MESSAGE = "Bons ventos!";
 
     /**
-     * Strings to be used by the user
+     * Command for creating a new fleet.
      */
     private static final String NOVAFROTA = "nova";
+    /** Command for ending the current exercise. */
     private static final String DESISTIR = "desisto";
+    /** Command for firing a round of three shots. */
     private static final String RAJADA = "rajada";
+    /** Command for displaying recorded valid shots. */
     private static final String VERTIROS = "ver";
+    /** Command for revealing the fleet. */
     private static final String BATOTA = "mapa";
+    /** Command for printing the fleet's status. */
     private static final String STATUS = "estado";
 
 
