@@ -53,5 +53,3 @@ Basic academic version of Battleship game to build upon.
 * Nau: <img width="800" height="547" alt="image" src="https://github.com/user-attachments/assets/c09db785-16ad-49bc-a8ea-ccd8205e2bfe" />
 * Caravela: <img width="650" height="434" alt="image" src="https://github.com/user-attachments/assets/7464dd3b-5d25-4423-9209-da415c554546" />
 * Barca: <img width="805" height="787" alt="image" src="https://github.com/user-attachments/assets/9686b762-f01a-45d8-965d-00a5db8e0144" />
-
-
