@@ -1,0 +1,74 @@
+name: Pull Request Notification
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+      - review_requested
+      - assigned
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  notify-responsible:
+    name: Notify responsible colleague
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify reviewer or assignee
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const author = pr.user.login;
+
+            const reviewers = (pr.requested_reviewers || [])
+              .map(reviewer => reviewer.login);
+
+            const assignees = (pr.assignees || [])
+              .map(assignee => assignee.login);
+
+            // Remove duplicates and do not notify the PR author as the
+            // "responsible colleague".
+            const responsibleUsers = [
+              ...new Set([...reviewers, ...assignees])
+            ].filter(login => login !== author);
+
+            let message;
+
+            if (responsibleUsers.length > 0) {
+              const mentions = responsibleUsers
+                .map(login => `@${login}`)
+                .join(" ");
+
+              message = [
+                `${mentions}`,
+                "",
+                `A sua atenção é necessária no Pull Request #${pr.number}: **${pr.title}**.`,
+                "",
+                `Autor: @${author}`,
+                `Evento: \`${context.payload.action}\``,
+                "",
+                "Por favor, reveja as alterações e, quando apropriado, aprove ou indique as correções necessárias."
+              ].join("\n");
+            } else {
+              message = [
+                `@${author}`,
+                "",
+                `O Pull Request #${pr.number} ainda não tem outro membro da equipa definido como reviewer ou assignee.`,
+                "",
+                "Adicione um colega como reviewer para que o workflow o possa notificar automaticamente."
+              ].join("\n");
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: message
+            });
