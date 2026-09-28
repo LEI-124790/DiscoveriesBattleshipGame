@@ -16,18 +16,10 @@ import org.apache.logging.log4j.Logger;
 public class Tasks {
     /** Logger for command feedback and game statistics. */
     private static final Logger LOGGER = LogManager.getLogger();
-
     /** Number of positions checked or fired at in each round. */
     private static final int NUMBER_SHOTS = 3;
-
     /** Farewell printed when the player gives up. */
     private static final String GOODBYE_MESSAGE = "Bons ventos!";
-
-    /**
-     * Command for creating a new fleet.
-     */
-    private static final String GOODBYE_MESSAGE = "Bons ventos!";
-
     /** Comando do utilizador para criar e inicializar uma nova frota. */
     private static final String NOVAFROTA = "nova";
     /** Command for ending the current exercise. */
