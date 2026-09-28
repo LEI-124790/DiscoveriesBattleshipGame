@@ -1,12 +1,14 @@
 /**
+ * Represents a ship in the Battleship game.
  *
+ * <p>A ship has a category, a bearing (orientation), an initial position,
+ * and a collection of positions that it occupies on the board.</p>
+ *
+ * <p>This class provides common functionality shared by all types of ships,
+ * such as checking whether the ship is still floating, determining its
+ * boundaries, checking occupied positions, detecting nearby ships, and
+ * processing shots.</p>
  */
-package iscteiul.ista.battleship;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 public abstract class Ship implements IShip {
 
     private static final String GALEAO = "galeao";
@@ -16,10 +18,13 @@ public abstract class Ship implements IShip {
     private static final String BARCA = "barca";
 
     /**
-     * @param shipKind
-     * @param bearing
-     * @param pos
-     * @return
+     * Creates a ship of the specified type.
+     *
+     * @param shipKind the type of ship to create
+     * @param bearing the orientation of the ship
+     * @param pos the initial position of the ship
+     * @return a new ship corresponding to {@code shipKind}, or {@code null}
+     *         if the specified type is unknown
      */
     static Ship buildShip(String shipKind, Compass bearing, Position pos) {
         Ship s;
@@ -45,17 +50,25 @@ public abstract class Ship implements IShip {
         return s;
     }
 
-
+    /** The category/type of the ship. */
     private String category;
+
+    /** The orientation of the ship. */
     private Compass bearing;
+
+    /** The initial position of the ship. */
     private IPosition pos;
+
+    /** The positions occupied by the ship. */
     protected List<IPosition> positions;
 
-
     /**
-     * @param category
-     * @param bearing
-     * @param pos
+     * Constructs a ship.
+     *
+     * @param category the category/type of the ship
+     * @param bearing the orientation of the ship
+     * @param pos the initial position of the ship
+     * @throws AssertionError if {@code bearing} or {@code pos} is {@code null}
      */
     public Ship(String category, Compass bearing, IPosition pos) {
         assert bearing != null;
@@ -67,10 +80,10 @@ public abstract class Ship implements IShip {
         positions = new ArrayList<>();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Returns the category of this ship.
      *
-     * @see battleship.IShip#getCategory()
+     * @return the ship category
      */
     @Override
     public String getCategory() {
@@ -78,36 +91,42 @@ public abstract class Ship implements IShip {
     }
 
     /**
-     * @return the positions
+     * Returns the positions occupied by this ship.
+     *
+     * @return the list of positions occupied by the ship
      */
     public List<IPosition> getPositions() {
         return positions;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Returns the initial position of this ship.
      *
-     * @see battleship.IShip#getPosition()
+     * @return the initial position
      */
     @Override
     public IPosition getPosition() {
         return pos;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Returns the bearing (orientation) of this ship.
      *
-     * @see battleship.IShip#getBearing()
+     * @return the ship bearing
      */
     @Override
     public Compass getBearing() {
         return bearing;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Determines whether the ship is still floating.
      *
-     * @see battleship.IShip#stillFloating()
+     * <p>A ship is considered to be floating if at least one of its
+     * positions has not been hit.</p>
+     *
+     * @return {@code true} if at least one position has not been hit;
+     *         {@code false} otherwise
      */
     @Override
     public boolean stillFloating() {
@@ -117,10 +136,10 @@ public abstract class Ship implements IShip {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Returns the row of the topmost position occupied by the ship.
      *
-     * @see battleship.IShip#getTopMostPos()
+     * @return the smallest row index occupied by the ship
      */
     @Override
     public int getTopMostPos() {
@@ -131,10 +150,10 @@ public abstract class Ship implements IShip {
         return top;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Returns the row of the bottommost position occupied by the ship.
      *
-     * @see battleship.IShip#getBottomMostPos()
+     * @return the largest row index occupied by the ship
      */
     @Override
     public int getBottomMostPos() {
@@ -145,10 +164,10 @@ public abstract class Ship implements IShip {
         return bottom;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Returns the column of the leftmost position occupied by the ship.
      *
-     * @see battleship.IShip#getLeftMostPos()
+     * @return the smallest column index occupied by the ship
      */
     @Override
     public int getLeftMostPos() {
@@ -159,10 +178,10 @@ public abstract class Ship implements IShip {
         return left;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Returns the column of the rightmost position occupied by the ship.
      *
-     * @see battleship.IShip#getRightMostPos()
+     * @return the largest column index occupied by the ship
      */
     @Override
     public int getRightMostPos() {
@@ -173,10 +192,13 @@ public abstract class Ship implements IShip {
         return right;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Determines whether this ship occupies the specified position.
      *
-     * @see battleship.IShip#occupies(battleship.IPosition)
+     * @param pos the position to check
+     * @return {@code true} if this ship occupies {@code pos};
+     *         {@code false} otherwise
+     * @throws AssertionError if {@code pos} is {@code null}
      */
     @Override
     public boolean occupies(IPosition pos) {
@@ -188,10 +210,16 @@ public abstract class Ship implements IShip {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Determines whether this ship is too close to another ship.
      *
-     * @see battleship.IShip#tooCloseTo(battleship.IShip)
+     * <p>The ships are considered too close if any position occupied by
+     * the other ship is adjacent to one of this ship's positions.</p>
+     *
+     * @param other the other ship to check
+     * @return {@code true} if the ships are too close;
+     *         {@code false} otherwise
+     * @throws AssertionError if {@code other} is {@code null}
      */
     @Override
     public boolean tooCloseTo(IShip other) {
@@ -205,10 +233,12 @@ public abstract class Ship implements IShip {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Determines whether this ship is too close to the specified position.
      *
-     * @see battleship.IShip#tooCloseTo(battleship.IPosition)
+     * @param pos the position to check
+     * @return {@code true} if the position is adjacent to any position
+     *         occupied by this ship; {@code false} otherwise
      */
     @Override
     public boolean tooCloseTo(IPosition pos) {
@@ -218,11 +248,14 @@ public abstract class Ship implements IShip {
         return false;
     }
 
-
-    /*
-     * (non-Javadoc)
+    /**
+     * Shoots at the specified position.
      *
-     * @see battleship.IShip#shoot(battleship.IPosition)
+     * <p>If the specified position is occupied by this ship, that position
+     * is marked as hit.</p>
+     *
+     * @param pos the position at which to shoot
+     * @throws AssertionError if {@code pos} is {@code null}
      */
     @Override
     public void shoot(IPosition pos) {
@@ -234,10 +267,13 @@ public abstract class Ship implements IShip {
         }
     }
 
-
+    /**
+     * Returns a string representation of this ship.
+     *
+     * @return a string containing the ship category, bearing and position
+     */
     @Override
     public String toString() {
         return "[" + category + " " + bearing + " " + pos + "]";
     }
-
 }
